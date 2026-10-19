@@ -1,6 +1,18 @@
-# Meteor Addon Template
+# 6b6t Addon
 
-A template to allow easy usage of the Meteor Addon API.
+Meteor Client addon with a kit bot and an automatic chest taker.
+
+## Modules
+
+- **Kit Bot** watches chat for typed kit requests from players in Meteor's Friends list. Add or remove allowed players using Meteor's Friends option; there is no separate addon whitelist. Each friend can place one request every 5 minutes; requests are handled one at a time in arrival order. The friend chooses the kit type and requests up to 6 shulker boxes. If the matching chest cannot provide the full requested amount, KitBot whispers `out of stock` and does not request a teleport. After a full pickup, Kit Bot requests `/tpa`, detects a 100-block coordinate jump within 2 seconds, displays a 2-second countdown in chat, then sends `/kill` to drop carried items. If the server blocks `/tpa` due to its own cooldown, KitBot whispers the remaining time to the requester and does not count the request as delivered. Since death drops the whole inventory on servers without keep-inventory, the amount controls chest pickup, not everything dropped by `/kill`.
+- **Coordinate Change Kill** is a separate, disabled-by-default module. When enabled, it sends `/kill` only when your position changes by more than 10 blocks at once. Its `ignore-baritone` option is on by default and prevents Baritone pathing from triggering `/kill`; it also ignores coordinate changes for 5 seconds after Baritone stops pathing. If it sends `/kill` during an active kit delivery, Kit Bot counts that player's kit as delivered and waits for respawn before advancing the queue.
+- **Chest Taker** does not scan or loot anything at startup or while idle. It only searches for a chest after Kit Bot receives a valid request from a Meteor friend. Baritone paths to the chest behind a sign labeled for the requested kit, then Chest Taker collects the requested number of shulkers before handing off to Kit Bot.
+
+Friend-only commands are `!kit pvp [amount]`, `!kit obsidian [amount]`, `!kit totems [amount]`, `!kit random [amount]`, `!kit build [amount]`, `!kit terracotta [amount]`, `!kit random concrete [amount]`, and `!kit refill [amount]`, for example `!kit obsidian 6`. The amount is the number of shulker boxes collected; when omitted, Kit Bot's `default-kit-amount` setting is used. Amounts must be between 1 and 6. Signs must contain the kit name: `pvp`, `obsidian`, `totem`, `Random`, `Build`, `Terracotta`, `Random_Concrete`, or `Refill`.
+
+Whisper `!help` for the kit list and an example request. Invalid friend commands receive `invalid command use !help`; kit requests from non-friends receive `not whitelisted cant give kits`.
+
+Chat triggers are recognized in common formats such as `<name> !kit`, `name: !kit`, `name whispers: !kit`, and `name whispers to you: !kit`.
 
 ### How to use
 
